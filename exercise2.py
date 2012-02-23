@@ -67,7 +67,7 @@ for n in range(len(people)):
       for m in range(len(people)):
            if n==m:
               pearson_norms[n][m]=1.
-              mutual_norms[n][m]=0.
+              mutual_norms[n][m]=100.
            else:
               mutual_norms[n][m]=norm2(n,m)
               pearson_norms[n][m]=pearson_corr(n,m)
@@ -78,7 +78,11 @@ print "Pearson correlations"
 print pearson_norms
 
 for n in range(len(people)):
-    print people[n]
-
+       print "Similar researchers as " + str(people[n]) + "are: "
+       for p in range(5):       
+           m=numpy.where(mutual_norms[n]==numpy.min(mutual_norms[n]))
+           print people[m[0][0]]
+           mutual_norms[n][m[0][0]]=numpy.max(mutual_norms[n])
+  
 
 
