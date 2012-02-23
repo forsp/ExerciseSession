@@ -1,6 +1,7 @@
 import numpy
 import inputdata
 from math import sqrt
+from scipy.stats.stats import pearsonr
 data = inputdata.raw_scores
 
 class Rating(object):
@@ -40,17 +41,44 @@ def norm2(guy1,guy2):
     dist=0.    
     for p in range(len(papers)):
          if vec1[p]!=0. and vec2[p]!=0.:
-            dist+=(vec1[p]-vec2[p])**2 
+            dist+=pow((vec1[p]-vec2[p]),2)
     norm=sqrt(dist)
     return norm
 
+def pearson_corr(guy1,guy2):
+    vec1=ratings[guy1]
+    vec2=ratings[guy2]  
+    l1=list()
+    l2=list()
+    for p in range(len(papers)):
+            if vec1[p]!=0. and vec2[p]!=0.: 
+                l1.append(vec1[p])
+                l2.append(vec2[p])  
+   # print "l1 " + str(l1)
+    #print "l2 " + str(l2)
+   # print "pearson " + str(numpy.cov(numpy.array(l1), numpy.array(l2)))
+    return pearsonr(numpy.array(l1), numpy.array(l2))[0]
+
+
 mutual_norms=numpy.zeros((len(people),len(people))) 
+pearson_norms=numpy.zeros((len(people),len(people))) 
+
 for n in range(len(people)):
       for m in range(len(people)):
-         #  if n==m:
-          #    mutual_norms[n][m]=
-        #   else:
+           if n==m:
+              pearson_norms[n][m]=1.
+              mutual_norms[n][m]=0.
+           else:
               mutual_norms[n][m]=norm2(n,m)
-       
+              pearson_norms[n][m]=pearson_corr(n,m)
+
+print "mutual norms"       
 print mutual_norms
+print "Pearson correlations"
+print pearson_norms
+
+for n in range(len(people)):
+    print people[n]
+
+
 
